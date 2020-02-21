@@ -71,6 +71,7 @@ def convert_to_wav(csv_file, target_dir):
 
 
 def main():
+    global media_path
     target_dir = args.target_dir
     os.makedirs(target_dir, exist_ok=True)
 
