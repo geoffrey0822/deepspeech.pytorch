@@ -21,6 +21,8 @@ parser.add_argument('--corpus-subdir', default="cv_corpus_v1",
                     type=str, help='Sub directory of corpus')
 parser.add_argument('--media-subdir', default="",
                     type=str, help='Sub directory of media files')
+parser.add_argument('--manifest-path', default="tmp",
+                    type=str, help='Path of exported manifests')
 args = parser.parse_args()
 COMMON_VOICE_URL = "https://common-voice-data-download.s3.amazonaws.com/cv_corpus_v1.tar.gz"
 
@@ -104,9 +106,10 @@ def main():
                        os.path.join(target_dir, os.path.splitext(csv_file)[0]))
 
     print('Creating manifests...')
+    output_manifest_path = args.manifest_path
     for csv_file in args.files_to_process.split(','):
         create_manifest(os.path.join(target_dir, os.path.splitext(csv_file)[0]),
-                        os.path.splitext(csv_file)[0] + '_manifest.csv',
+                        os.path.join(output_manifest_path, os.path.splitext(csv_file)[0] + '_manifest.csv'),
                         args.min_duration,
                         args.max_duration)
 
