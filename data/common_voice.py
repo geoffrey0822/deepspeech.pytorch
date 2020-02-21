@@ -75,9 +75,9 @@ def main():
     target_dir = args.target_dir
     os.makedirs(target_dir, exist_ok=True)
 
-    media_path = target_dir
+    media_path = os.path.join(target_dir, "CV_unpacked")
     if args.media_subdir is not None and args.media_subdir != '':
-        media_path = os.path.join(target_dir, args.media_subdir)
+        media_path = os.path.join(media_path, args.media_subdir)
 
     target_unpacked_dir = os.path.join(target_dir, "CV_unpacked")
     os.makedirs(target_unpacked_dir, exist_ok=True)
