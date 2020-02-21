@@ -17,6 +17,8 @@ parser.add_argument('--max-duration', default=15, type=int,
                     help='Prunes training samples longer than the max duration (given in seconds, default 15)')
 parser.add_argument('--files-to-process', default="cv-valid-dev.csv,cv-valid-test.csv,cv-valid-train.csv",
                     type=str, help='list of *.csv file names to process')
+parser.add_argument('--corpus-subdir', default="cv_corpus_v1",
+                    type=str, help='Sub directory of corpus')
 args = parser.parse_args()
 COMMON_VOICE_URL = "https://common-voice-data-download.s3.amazonaws.com/cv_corpus_v1.tar.gz"
 
@@ -76,7 +78,10 @@ def main():
     tar.close()
 
     for csv_file in args.files_to_process.split(','):
-        convert_to_wav(os.path.join(target_unpacked_dir, 'cv_corpus_v1/', csv_file),
+        corpus_path = target_unpacked_dir
+        if args.corpus_subdir is not None and args.corpus_subdir !='':
+            corpus_path = os.path.join(target_unpacked_dir, args.corpus_subdir)
+        convert_to_wav(os.path.join(corpus_path, csv_file),
                        os.path.join(target_dir, os.path.splitext(csv_file)[0]))
 
     print('Creating manifests...')
