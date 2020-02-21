@@ -52,7 +52,7 @@ def convert_to_wav(csv_file, target_dir):
     print('Converting mp3 to wav for {}.'.format(csv_file))
     with open(csv_file) as csvfile:
         reader = csv.DictReader(csvfile)
-        data = [(row['filename'], row['text']) for row in reader]
+        data = [(row['path'], row['sentence']) for row in reader]
         with ThreadPool(10) as pool:
             pool.map(process, data)
 
@@ -81,7 +81,7 @@ def main():
         corpus_path = target_unpacked_dir
         if args.corpus_subdir is not None and args.corpus_subdir !='':
             corpus_path = os.path.join(target_unpacked_dir, args.corpus_subdir)
-        convert_to_wav(os.path.join(corpus_path, csv_file),
+        convert_to_wav(os.path.join(target_unpacked_dir, 'cv_corpus_v1/', csv_file),
                        os.path.join(target_dir, os.path.splitext(csv_file)[0]))
 
     print('Creating manifests...')
