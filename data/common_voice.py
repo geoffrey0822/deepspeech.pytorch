@@ -107,6 +107,8 @@ def main():
 
     print('Creating manifests...')
     output_manifest_path = args.manifest_path
+    if not os.path.isdir(output_manifest_path):
+        os.mkdir(output_manifest_path)
     for csv_file in args.files_to_process.split(','):
         create_manifest(os.path.join(target_dir, os.path.splitext(csv_file)[0]),
                         os.path.join(output_manifest_path, os.path.splitext(csv_file)[0] + '_manifest.csv'),
