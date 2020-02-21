@@ -1,5 +1,6 @@
 import os, sys, re, argparse, csv, ntpath
 
+TMP_DIR = 'tmp'
 
 def seg_char(sent):
     # handle english first
@@ -14,19 +15,44 @@ def seg_char(sent):
     return chars
 
 
-def add_2_dict(target_file, words):
+def add_2_dict(target_file, words, end_str=','):
     fs = None
     if not os.path.isfile(target_file):
         fs = open(target_file, 'w')
         fs.write('[\n')
     else:
         fs = open(target_file, 'a+')
+    for word in words:
+        fs.write('\"')
+        fs.write(word)
+        if end_str is not None:
+            fs.write('\"%s\n'%end_str)
+        else:
+            fs.write('\"\n')
 
 
-def closeDict(target_file):
+def close_dict(target_file):
     with open(target_file, 'a+') as fs:
         fs.write(']')
 
+
+def buffer_dict_continue(target_file):
+    global TMP_DIR
+    if not os.path.isdir(TMP_DIR):
+        os.mkdir(TMP_DIR)
+    if not os.path.isfile(target_file):
+        return False
+    else:
+        tmp_path = os.path.join(TMP_DIR, 'tmp_dict.txt')
+        with open(target_file, 'r') as inputf:
+            with open(tmp_path, 'w') as outputf:
+                for ln in inputf:
+                    line = ln.rstrip('\n')
+                    outputf.write(line)
+                    outputf.write('\n')
+                    if not line.endswith('[') and not line.endswith(','):
+                        break
+        return True
 
 def path_leaf(path):
     head, tail = ntpath.split(path)
@@ -47,7 +73,8 @@ def process_files(rec_file, dst, dict_file, simplified=False):
                     for ln in txtf:
                         line = ln.rstrip('\n')
                         cchar = seg_char(line)
-                        outf.write()
+                        outf.write(line)
+
 
 
 
