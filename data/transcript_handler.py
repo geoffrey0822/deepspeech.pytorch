@@ -1,4 +1,5 @@
 import os, sys, re, argparse, csv, ntpath, shutil
+from opencc import OpenCC
 
 TMP_DIR = 'tmp'
 
@@ -68,6 +69,9 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False):
     if not os.path.isdir(dst):
         os.mkdir(dst)
     rec_f = None
+    cc = None
+    if simplified:
+        cc = OpenCC('s2hk')
     if os.path.isfile(new_rec_file):
         rec_f = open(new_rec_file, 'a+')
     else:
@@ -82,6 +86,8 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False):
                 with open(txt_file, 'r') as txtf:
                     for ln in txtf:
                         line = ln.rstrip('\n')
+                        if cc is not None:
+                            line = cc.convert(line)
                         cchar = seg_char(line)
                         outf.write(line)
                         add_2_dict(dict_file, cchar)
