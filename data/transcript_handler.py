@@ -53,7 +53,7 @@ def buffer_dict_continue(target_file):
         return False
     else:
         f = open(target_file, 'rb+')
-        f.seek(-2, os.SEEK_END)
+        f.seek(-1, os.SEEK_END)
         f.truncate()
         f.close()
         exit(-1)
