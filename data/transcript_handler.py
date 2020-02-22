@@ -117,11 +117,11 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
         reader = csv.reader(f, delimiter=',')
         count = 0
         for row in reader:
-            audio_file = row[0]
+            audio_file = row[0].replace('\\','/')
             txt_file = row[1]
             if remove_path is not None:
-                audio_file = os.path.join(replace_path, os.path.relpath(audio_file, remove_path))
-                txt_file = os.path.join(replace_path,os.path.relpath(txt_file, remove_path))
+                audio_file = os.path.join(replace_path, os.path.relpath(audio_file, remove_path.replace('\\','/')))
+                txt_file = os.path.join(replace_path,os.path.relpath(txt_file, remove_path.replace('\\','/')))
             new_file_path = os.path.join(dst, path_leaf(txt_file))
             with open(new_file_path, 'w', encoding='utf8') as outf:
                 with open(txt_file, 'r', encoding='utf8') as txtf:
