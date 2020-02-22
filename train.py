@@ -166,7 +166,7 @@ if __name__ == '__main__':
             if main_proc and args.tensorboard:  # Previous scores to tensorboard logs
                 tensorboard_logger.load_previous_values(start_epoch, package)
     else:
-        with open(args.labels_path) as label_file:
+        with open(args.labels_path, 'r', encoding='utf8') as label_file:
             labels = str(''.join(json.load(label_file)))
 
         audio_conf = dict(sample_rate=args.sample_rate,

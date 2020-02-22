@@ -1,5 +1,6 @@
 import os, sys, re, argparse, csv, ntpath, shutil
 from opencc import OpenCC
+import json
 
 TMP_DIR = 'tmp'
 
@@ -34,9 +35,14 @@ def add_2_dict(target_file, words, end_str=','):
     fs.close()
 
 
-def close_dict(target_file):
-    with open(target_file, 'a+') as fs:
-        fs.write(']')
+def close_dict(target_file, remove_last=False):
+    if remove_last:
+        f = open(target_file, 'rb+')
+        f.seek(-3, os.SEEK_END)
+        f.truncate()
+        f.close()
+    with open(target_file, 'a+', encoding='utf8') as fs:
+        fs.write('\n]')
 
 
 def buffer_dict_continue(target_file):
@@ -64,6 +70,32 @@ def path_leaf(path):
     return tail or ntpath.basename(head)
 
 
+def remove_duplicates_dict(dict_file):
+    ds = json.load(open(dict_file, 'r', encoding='utf8'))
+    unique_char = {char for char in ds}
+    with open(dict_file, 'w', encoding='utf8') as outf:
+        #print(unique_char)
+        json_str = json.dumps(list(unique_char), ensure_ascii=False)
+        outf.write(json_str)
+
+
+def reformat_dict(dict_file):
+    ds = json.load(open(dict_file, 'r', encoding='utf8'))
+    unique_char = list({char for char in ds})
+    with open(dict_file, 'w', encoding='utf8') as outf:
+        outf.write('[\n')
+        last_char = unique_char[-1]
+        for char in unique_char:
+            outf.write('\"')
+            outf.write(char)
+            outf.write('\"')
+            if char != last_char:
+                outf.write(',\n')
+            else:
+                outf.write('\n')
+        outf.write(']')
+
+
 def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
                   remove_path=None, replace_path=None):
     buffer_dict_continue(dict_file)
@@ -77,6 +109,10 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
         rec_f = open(new_rec_file, 'a+')
     else:
         rec_f = open(new_rec_file, 'w')
+    total = 0
+    with open(rec_file, 'r') as f:
+        for ln in f:
+            total+=1
     with open(rec_file, 'r') as f:
         reader = csv.reader(f, delimiter=',')
         count = 0
@@ -93,16 +129,18 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
                         line = ln.rstrip('\n')
                         if cc is not None:
                             line = cc.convert(line)
-                        line = line.replace(' ','')
+                        line = line.replace(' ','').replace('(','').replace(')','').replace('_','').replace('~')
                         cchar = seg_char(line)
                         outf.write(line)
                         add_2_dict(dict_file, cchar)
             rec_f.write('%s,%s\n'%(audio_file, new_file_path))
             count+=1
             if count%1000==0:
-                print('processed %d data'%count)
+                print('processed %d/%d data'%(count, total))
     rec_f.close()
-    close_dict(dict_file)
+    close_dict(dict_file, True)
+    remove_duplicates_dict(dict_file)
+    reformat_dict(dict_file)
 
 
 def main():
