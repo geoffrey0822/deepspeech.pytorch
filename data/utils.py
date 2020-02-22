@@ -69,9 +69,22 @@ def order_and_prune_files(file_paths, min_duration, max_duration):
     duration_file_paths.sort(key=func)
     return [x[0] for x in duration_file_paths]  # Remove durations
 
+
 def reduce_tensor(tensor, world_size):
     rt = tensor.clone()
     dist.all_reduce(rt, op=dist.reduce_op.SUM)
     rt /= world_size
     return rt
 
+
+def seg_char(sent):
+    # handle english first
+    pattern_char_1 = re.compile(r'([\W])')
+    parts = pattern_char_1.split(sent)
+    parts = [p for p in parts if len(p.strip())>0]
+
+    # handle chinese
+    pattern = re.compile(r'([\u4e00-\u9fa5])')
+    chars = pattern.split(sent)
+    chars = [w for w in chars if len(w.strip())>0]
+    return chars

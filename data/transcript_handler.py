@@ -1,21 +1,8 @@
 import os, sys, re, argparse, csv, ntpath, shutil
 from opencc import OpenCC
-import json
+import json, utils
 
 TMP_DIR = 'tmp'
-
-
-def seg_char(sent):
-    # handle english first
-    pattern_char_1 = re.compile(r'([\W])')
-    parts = pattern_char_1.split(sent)
-    parts = [p for p in parts if len(p.strip())>0]
-
-    # handle chinese
-    pattern = re.compile(r'([\u4e00-\u9fa5])')
-    chars = pattern.split(sent)
-    chars = [w for w in chars if len(w.strip())>0]
-    return chars
 
 
 def add_2_dict(target_file, words, end_str=','):
@@ -130,7 +117,7 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
                         if cc is not None:
                             line = cc.convert(line)
                         line = line.replace(' ','').replace('(','').replace(')','').replace('_','').replace('~','')
-                        cchar = seg_char(line)
+                        cchar = utils.seg_char(line)
                         outf.write(line)
                         add_2_dict(dict_file, cchar)
             rec_f.write('%s,%s\n'%(audio_file, new_file_path))
