@@ -38,7 +38,7 @@ def add_2_dict(target_file, words, end_str=','):
 def close_dict(target_file, remove_last=False):
     if remove_last:
         f = open(target_file, 'rb+')
-        f.seek(-3, os.SEEK_END)
+        f.seek(-2, os.SEEK_END)
         f.truncate()
         f.close()
     with open(target_file, 'a+', encoding='utf8') as fs:
