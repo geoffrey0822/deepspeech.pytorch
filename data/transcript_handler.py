@@ -120,6 +120,7 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
             audio_file = row[0].replace('\\','/')
             txt_file = row[1]
             if remove_path is not None:
+                print(audio_file)
                 audio_file = audio_file.replace(remove_path.replace('\\','/'),replace_path)
                 txt_file = txt_file.replace(remove_path.replace('\\','/'),replace_path)
                 #audio_file = os.path.join(replace_path, audio_file)
