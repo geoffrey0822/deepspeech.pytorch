@@ -56,6 +56,7 @@ def buffer_dict_continue(target_file):
         f.seek(-3, os.SEEK_END)
         f.truncate()
         f.close()
+        exit(-1)
         return True
 
 
