@@ -87,7 +87,7 @@ def reformat_dict(dict_file):
         last_char = unique_char[-1]
         for char in unique_char:
             outf.write('\"')
-            outf.write(char.rstrip(' '))
+            outf.write(char.replace(' ',''))
             outf.write('\"')
             if char != last_char:
                 outf.write(',\n')
