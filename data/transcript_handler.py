@@ -56,9 +56,8 @@ def buffer_dict_continue(target_file):
         f.seek(-1, os.SEEK_END)
         f.truncate()
         f.close()
-        with open('target_file','a+', encoding='utf8') as f:
+        with open(target_file,'a+', encoding='utf8') as f:
             f.write(',\n')
-        exit(-1)
         return True
 
 
