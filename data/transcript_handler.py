@@ -52,16 +52,10 @@ def buffer_dict_continue(target_file):
     if not os.path.isfile(target_file):
         return False
     else:
-        tmp_path = os.path.join(TMP_DIR, 'tmp_dict.txt')
-        with open(target_file, 'r', encoding='utf8') as inputf:
-            with open(tmp_path, 'w', encoding='utf8') as outputf:
-                for ln in inputf:
-                    line = ln.rstrip('\n')
-                    outputf.write(line)
-                    outputf.write('\n')
-                    if not line.endswith('[') and not line.endswith(','):
-                        break
-        shutil.copyfile(tmp_path, target_file)
+        f = open(target_file, 'rb+')
+        f.seek(-3, os.SEEK_END)
+        f.truncate()
+        f.close()
         return True
 
 
