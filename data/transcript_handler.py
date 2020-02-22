@@ -53,10 +53,12 @@ def buffer_dict_continue(target_file):
         return False
     else:
         f = open(target_file, 'rb+')
-        f.seek(-3, os.SEEK_END)
+        f.seek(-2, os.SEEK_END)
         f.truncate()
         f.close()
         exit(-1)
+        with open('target_file','a+', encoding='utf8') as f:
+            f.write(',')
         return True
 
 
