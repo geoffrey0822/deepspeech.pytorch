@@ -6,6 +6,10 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
     if not os.path.isdir(dst):
         os.mkdir(dst)
 
+    if not os.path.isfile(manifest):
+        print('%s not found',manifest)
+        exit(-1)
+
     file_paths = [os.path.join(src, filename) for filename in os.listdir(src)]
     total = len(file_paths)
 
@@ -23,7 +27,7 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
                 audio_path = fields[0]
                 file_name = os.path.basename(audio_path)
                 corpus_path = fields[1]
-                print(audio_path)
+                #print(audio_path)
                 if audio_path in file_paths:
                     new_audio_path = os.path.join(dst, file_name)
                     cmd = "sox {} -r {} -b 16 -c 1 {}".format(
