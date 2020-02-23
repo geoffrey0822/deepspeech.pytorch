@@ -33,7 +33,7 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
                     count+=1
                     if count%1000:
                         print('processed %d/%d'%(count,final_total))
-
+    print('%d are valid audio files'%final_total)
 
 def main():
     parser = argparse.ArgumentParser(description='Filter and conversion')
