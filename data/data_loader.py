@@ -15,8 +15,7 @@ import math
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from .spec_augment import spec_augment
-import utils
-from utils import seg_char
+from data.utils import seg_char
 
 windows = {'hamming': scipy.signal.hamming, 'hann': scipy.signal.hann, 'blackman': scipy.signal.blackman,
            'bartlett': scipy.signal.bartlett}
