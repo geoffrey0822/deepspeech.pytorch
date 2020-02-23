@@ -7,6 +7,7 @@ from tqdm import tqdm
 import subprocess
 import torch.distributed as dist
 import json
+import re
 
 
 def json_load_byteified(file_handle):
