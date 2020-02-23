@@ -166,7 +166,7 @@ class GreedyDecoder(Decoder):
         string = ''
         offsets = []
         if self.space_index >= len(self.labels):
-            print('label\'s length:%d [space index:%d]' % (len(self.labels)), self.space_index)
+            print('label\'s length:%d [space index:%d]' % (len(self.labels), self.space_index))
         for i in range(size):
             char = self.int_to_char[sequence[i].item()]
             if char != self.int_to_char[self.blank_index]:
