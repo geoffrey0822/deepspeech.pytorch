@@ -165,6 +165,8 @@ class GreedyDecoder(Decoder):
     def process_string(self, sequence, size, remove_repetitions=False):
         string = ''
         offsets = []
+        if self.space_index >= len(self.labels):
+            print('label\'s length:%d [space index:%d]' % (len(self.labels)), self.space_index)
         for i in range(size):
             char = self.int_to_char[sequence[i].item()]
             if char != self.int_to_char[self.blank_index]:
@@ -172,8 +174,7 @@ class GreedyDecoder(Decoder):
                 if remove_repetitions and i != 0 and char == self.int_to_char[sequence[i - 1].item()]:
                     pass
                 elif char == self.labels[self.space_index]:
-                    if self.space_index >= len(self.labels):
-                        print('label\'s length:%d [space index:%d]'%(len(self.labels)),self.space_index)
+
                     string += ' '
                     offsets.append(i)
                 else:
