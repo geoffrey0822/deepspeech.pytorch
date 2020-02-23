@@ -9,6 +9,7 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
     file_paths = os.listdir(src)
     total = len(file_paths)
 
+    print('There are %d audio files at origin'%total)
     count = 0
     file_paths = utils.order_and_prune_files(file_paths, min_duration, max_duration)
     final_total = len(file_paths)
