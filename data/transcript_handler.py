@@ -118,7 +118,7 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
                         line = ln.rstrip('\n')
                         if cc is not None:
                             line = cc.convert(line)
-                        line = line.replace('(','').replace(')','').replace('_','').replace('~','')
+                        line = line.replace(' ','').replace('(','').replace(')','').replace('_','').replace('~','')
                         cchar = utils.seg_char(line)
                         outf.write(line)
                         add_2_dict(dict_file, cchar)
