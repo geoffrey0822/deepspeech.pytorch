@@ -58,7 +58,7 @@ def main():
     src = args.src
     dst = args.dst
     data_path = args.manifest
-    new_data_path = args.manifest
+    new_data_path = args.new_manifest
     sample_rate = args.sample_rate
     min_duration = None
     max_duration = None
