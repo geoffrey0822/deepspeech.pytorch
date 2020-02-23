@@ -31,9 +31,9 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
                     subprocess.call([cmd], shell=True)
                     outf.write('%s,%s\n'%(new_audio_path, corpus_path))
                     count+=1
-                    if count%1000:
+                    if count%1000==0:
                         print('processed %d/%d'%(count,final_total))
-    print('%d are valid audio files'%final_total)
+    print('%d are valid audio files and %d are removed'%(final_total,total-final_total))
 
 def main():
     parser = argparse.ArgumentParser(description='Filter and conversion')
