@@ -10,6 +10,8 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
         print('%s not found',manifest)
         exit(-1)
 
+    print('new manifest:%s'%new_manifest)
+
     file_paths = [os.path.join(src, filename) for filename in os.listdir(src)]
     total = len(file_paths)
 
