@@ -14,6 +14,7 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
     file_paths = utils.order_and_prune_files(file_paths, min_duration, max_duration)
     final_total = len(file_paths)
 
+    print('%d are valid audio files and %d will be ignored'%(final_total, total-final_total))
     with open(new_manifest, 'w') as outf:
         with open(manifest, 'r') as inputf:
             for ln in inputf:
@@ -22,6 +23,7 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
                 audio_path = fields[0]
                 file_name = os.path.basename(audio_path)
                 corpus_path = fields[1]
+                print(audio_path)
                 if audio_path in file_paths:
                     new_audio_path = os.path.join(dst, file_name)
                     cmd = "sox {} -r {} -b 16 -c 1 {}".format(
@@ -32,8 +34,8 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
                     outf.write('%s,%s\n'%(new_audio_path, corpus_path))
                     count+=1
                     if count%1000==0:
-                        print('processed %d/%d'%(count,final_total))
-    print('%d are valid audio files and %d are removed'%(final_total,total-final_total))
+                        print('processed %d/%d'%(count, final_total))
+
 
 def main():
     parser = argparse.ArgumentParser(description='Filter and conversion')
