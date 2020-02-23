@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from .spec_augment import spec_augment
 import utils
+from utils import seg_char
 
 windows = {'hamming': scipy.signal.hamming, 'hann': scipy.signal.hann, 'blackman': scipy.signal.blackman,
            'bartlett': scipy.signal.bartlett}
@@ -172,7 +173,7 @@ class SpectrogramDataset(Dataset, SpectrogramParser):
     def parse_transcript(self, transcript_path):
         with open(transcript_path, 'r', encoding='utf8') as transcript_file:
             transcript = transcript_file.read().replace('\n', '')
-            transcript = utils.seg_char(transcript)
+            transcript = seg_char(transcript)
         transcript = list(filter(None, [self.labels_map.get(x) for x in list(transcript)]))
         return transcript
 
