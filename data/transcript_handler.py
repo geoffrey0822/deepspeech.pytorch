@@ -54,6 +54,8 @@ def path_leaf(path):
 
 
 def remove_duplicates_dict(dict_file):
+    if not os.path.isfile(dict_file):
+        return
     ds = json.load(open(dict_file, 'r', encoding='utf8'))
     unique_char = {char for char in ds}
     with open(dict_file, 'w', encoding='utf8') as outf:
