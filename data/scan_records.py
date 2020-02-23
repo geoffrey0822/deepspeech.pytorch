@@ -6,7 +6,7 @@ def regenerate(src, dst, manifest, new_manifest, sample_rate,
     if not os.path.isdir(dst):
         os.mkdir(dst)
 
-    file_paths = [os.listdir(src)]
+    file_paths = os.listdir(src)
     total = len(file_paths)
 
     count = 0
