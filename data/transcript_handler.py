@@ -127,6 +127,7 @@ def process_files(rec_file, dst, new_rec_file, dict_file, simplified=False,
             if count%1000==0:
                 print('processed %d/%d data'%(count, total))
     rec_f.close()
+    add_2_dict(dict_file, [' '])
     close_dict(dict_file, True)
     remove_duplicates_dict(dict_file)
     reformat_dict(dict_file)
