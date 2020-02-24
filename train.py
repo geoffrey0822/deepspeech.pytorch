@@ -25,6 +25,7 @@ parser.add_argument('--val-manifest', metavar='DIR',
                     help='path to validation manifest csv', default='data/val_manifest.csv')
 parser.add_argument('--sample-rate', default=16000, type=int, help='Sample rate')
 parser.add_argument('--batch-size', default=20, type=int, help='Batch size for training')
+parser.add_argument('--val-batch-size', default=1, type=int, help='Batch size for training')
 parser.add_argument('--num-workers', default=4, type=int, help='Number of workers used in data-loading')
 parser.add_argument('--labels-path', default='labels.json', help='Contains all characters for transcription')
 parser.add_argument('--window-size', default=.02, type=float, help='Window size for spectrogram in seconds')
@@ -198,7 +199,7 @@ if __name__ == '__main__':
                                                     num_replicas=args.world_size, rank=args.rank)
     train_loader = AudioDataLoader(train_dataset,
                                    num_workers=args.num_workers, batch_sampler=train_sampler)
-    test_loader = AudioDataLoader(test_dataset, batch_size=args.batch_size,
+    test_loader = AudioDataLoader(test_dataset, batch_size=args.val_batch_size,
                                   num_workers=args.num_workers)
 
     if (not args.no_shuffle and start_epoch != 0) or args.no_sorta_grad:
