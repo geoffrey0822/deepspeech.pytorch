@@ -29,9 +29,9 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=Fa
     start_iter = 0
     #nlen = len(test_loader)
     print('')
-    print('processing...\r', end='')
+    print('processing...')
     for i, (data) in enumerate(test_loader, start=start_iter):
-        print('processing %d\r'%(i+1),end='')
+        print('processing %d'%(i+1))
         inputs, targets, input_percentages, target_sizes = data
         input_sizes = input_percentages.mul_(int(inputs.size(3))).int()
         inputs = inputs.to(device)
