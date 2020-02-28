@@ -20,7 +20,7 @@ parser.add_argument('--save-output', default=None, help="Saves output of model f
 parser = add_decoder_args(parser)
 
 
-def evaluate(test_loader, device, model, decoder, target_decoder, save_output=False, verbose=False, half=False):
+def evaluate(test_loader, device, model, decoder, target_decoder, save_output=None, verbose=False, half=False):
     #model.eval()
     print('Evaluating')
     total_cer, total_wer, num_tokens, num_chars = 0, 0, 0, 0
