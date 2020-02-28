@@ -21,7 +21,7 @@ parser = add_decoder_args(parser)
 
 
 def evaluate(test_loader, device, model, decoder, target_decoder, save_output=False, verbose=False, half=False):
-    #model.eval()
+    model.eval()
     total_cer, total_wer, num_tokens, num_chars = 0, 0, 0, 0
     output_data = []
     #for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader), miniters =len(test_loader)/100):
