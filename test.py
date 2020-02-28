@@ -25,7 +25,7 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
     print('Evaluating')
     total_cer, total_wer, num_tokens, num_chars = 0, 0, 0, 0
     output_data = []
-    for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader):
+    for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader)):
     #start_iter = 0
     #nlen = len(test_loader)
     #print('')
