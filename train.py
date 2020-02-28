@@ -204,8 +204,9 @@ if __name__ == '__main__':
     train_loader = AudioDataLoader(train_dataset,
                                    num_workers=args.num_workers, batch_sampler=train_sampler, pin_memory=False)
 
-    test_loader = AudioDataLoader(test_dataset, batch_size=args.val_batch_size,
-                                  num_workers=args.num_workers, pin_memory=False)
+    if args.val_batch_size>0:
+        test_loader = AudioDataLoader(test_dataset, batch_size=args.val_batch_size,
+                                      num_workers=args.num_workers, pin_memory=False)
 
 
     if (not args.no_shuffle and start_epoch != 0) or args.no_sorta_grad:
@@ -309,12 +310,20 @@ if __name__ == '__main__':
 
         start_iter = 0  # Reset start iteration for next epoch
 
-        with torch.no_grad():
-            wer, cer, output_data = evaluate(test_loader=test_loader,
-                                             device=device,
-                                             model=model,
-                                             decoder=decoder,
-                                             target_decoder=decoder)
+        if args.val_batch_size > 0:
+            with torch.no_grad():
+                wer, cer, output_data = evaluate(test_loader=test_loader,
+                                                 device=device,
+                                                 model=model,
+                                                 decoder=decoder,
+                                                 target_decoder=decoder)
+        else:
+            with torch.no_grad():
+                wer, cer, output_data = evaluate(test_loader=train_loader,
+                                                 device=device,
+                                                 model=model,
+                                                 decoder=decoder,
+                                                 target_decoder=decoder)
         loss_results[epoch] = avg_loss
         wer_results[epoch] = wer
         cer_results[epoch] = cer
