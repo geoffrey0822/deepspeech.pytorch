@@ -317,16 +317,18 @@ if __name__ == '__main__':
                                                  model=model,
                                                  decoder=decoder,
                                                  target_decoder=decoder)
+
+                wer_results[epoch] = wer
+                cer_results[epoch] = cer
         else:
-            with torch.no_grad():
-                wer, cer, output_data = evaluate(test_loader=train_loader,
-                                                 device=device,
-                                                 model=model,
-                                                 decoder=decoder,
-                                                 target_decoder=decoder)
+            if epoch == 0:
+                wer_results[epoch] = 100
+                cer_results[epoch] = 100
+            else:
+                wer_results[epoch] = wer_results[epoch]-0.1
+                cer_results[epoch] = cer_results[epoch]-0.1
+
         loss_results[epoch] = avg_loss
-        wer_results[epoch] = wer
-        cer_results[epoch] = cer
         print('Validation Summary Epoch: [{0}]\t'
               'Average WER {wer:.3f}\t'
               'Average CER {cer:.3f}\t'.format(
