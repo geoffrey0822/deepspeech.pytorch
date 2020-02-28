@@ -194,17 +194,17 @@ if __name__ == '__main__':
                                       normalize=True, speed_volume_perturb=False, spec_augment=False)
     if not args.distributed:
         train_sampler = BucketingSampler(train_dataset, batch_size=args.batch_size)
-        test_sampler = BucketingSampler(test_dataset, batch_size=args.val_batch_size)
+        #test_sampler = BucketingSampler(test_dataset, batch_size=args.val_batch_size)
     else:
         train_sampler = DistributedBucketingSampler(train_dataset, batch_size=args.batch_size,
                                                     num_replicas=args.world_size, rank=args.rank)
-        test_sampler = DistributedBucketingSampler(test_dataset, batch_size=args.val_batch_size,
+        #test_sampler = DistributedBucketingSampler(test_dataset, batch_size=args.val_batch_size,
                                                     num_replicas=args.world_size, rank=args.rank)
 
     train_loader = AudioDataLoader(train_dataset,
                                    num_workers=args.num_workers, batch_sampler=train_sampler, pin_memory=False)
 
-    test_loader = AudioDataLoader(test_dataset, batch_sampler=test_sampler,
+    test_loader = AudioDataLoader(test_dataset, batch_size=args.val_batch_size,
                                   num_workers=args.num_workers, pin_memory=False)
 
 
