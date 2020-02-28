@@ -199,7 +199,7 @@ if __name__ == '__main__':
         train_sampler = DistributedBucketingSampler(train_dataset, batch_size=args.batch_size,
                                                     num_replicas=args.world_size, rank=args.rank)
         #test_sampler = DistributedBucketingSampler(test_dataset, batch_size=args.val_batch_size,
-                                                    num_replicas=args.world_size, rank=args.rank)
+                                                    #num_replicas=args.world_size, rank=args.rank)
 
     train_loader = AudioDataLoader(train_dataset,
                                    num_workers=args.num_workers, batch_sampler=train_sampler, pin_memory=False)
