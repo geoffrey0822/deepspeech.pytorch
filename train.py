@@ -310,6 +310,7 @@ if __name__ == '__main__':
 
         start_iter = 0  # Reset start iteration for next epoch
         if args.val_batch_size > 0:
+            print('transforming model to evaluation model')
             model.eval()
             with torch.no_grad():
                 wer, cer, output_data = evaluate(test_loader=test_loader,
