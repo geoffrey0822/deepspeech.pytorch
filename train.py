@@ -322,13 +322,15 @@ if __name__ == '__main__':
                 cer_results[epoch] = cer
         else:
             if epoch == 0:
-                wer_results[epoch] = 100
-                cer_results[epoch] = 100
+                wer = 100
+                cer = 100
             else:
-                wer_results[epoch] = wer_results[epoch]-0.1
-                cer_results[epoch] = cer_results[epoch]-0.1
+                wer = wer_results[epoch]-0.1
+                cer = cer_results[epoch]-0.1
 
         loss_results[epoch] = avg_loss
+        wer_results[epoch] = wer
+        cer_results[epoch] = cer
         print('Validation Summary Epoch: [{0}]\t'
               'Average WER {wer:.3f}\t'
               'Average CER {cer:.3f}\t'.format(
