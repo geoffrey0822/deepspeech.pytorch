@@ -27,8 +27,9 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=Fa
     #for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader), miniters =len(test_loader)/100):
     start_iter = 0
     nlen = len(test_loader)
+    print('processing...')
     for i, (data) in enumerate(test_loader, start=start_iter):
-        print('processing %d/%d'%(i+1, nlen))
+        print('processing %d/%d\r'%(i+1, nlen),end='')
         inputs, targets, input_percentages, target_sizes = data
         input_sizes = input_percentages.mul_(int(inputs.size(3))).int()
         inputs = inputs.to(device)
@@ -62,6 +63,7 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=Fa
                 print("Hyp:", transcript.lower())
                 print("WER:", float(wer_inst) / len(reference.split()),
                       "CER:", float(cer_inst) / len(reference.replace(' ', '')), "\n")
+    print('')
     wer = float(total_wer) / num_tokens
     cer = float(total_cer) / num_chars
     return wer * 100, cer * 100, output_data
