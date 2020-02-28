@@ -204,6 +204,9 @@ if __name__ == '__main__':
     train_loader = AudioDataLoader(train_dataset,
                                    num_workers=args.num_workers, batch_sampler=train_sampler, pin_memory=False)
 
+    test_loader = AudioDataLoader(test_dataset, batch_sampler=test_sampler,
+                                  num_workers=args.num_workers, pin_memory=False)
+
 
     if (not args.no_shuffle and start_epoch != 0) or args.no_sorta_grad:
         print("Shuffling batches for the following epochs")
@@ -306,17 +309,12 @@ if __name__ == '__main__':
 
         start_iter = 0  # Reset start iteration for next epoch
 
-        print('Preloading test_loader...')
         with torch.no_grad():
-            print('loading test_loader...')
-            test_loader = AudioDataLoader(test_dataset, batch_sampler=test_sampler,
-                                          num_workers=args.num_workers, pin_memory=False)
             wer, cer, output_data = evaluate(test_loader=test_loader,
                                              device=device,
                                              model=model,
                                              decoder=decoder,
                                              target_decoder=decoder)
-            test_loader = None
         loss_results[epoch] = avg_loss
         wer_results[epoch] = wer
         cer_results[epoch] = cer
