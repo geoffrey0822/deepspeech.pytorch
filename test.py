@@ -24,7 +24,9 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=Fa
     model.eval()
     total_cer, total_wer, num_tokens, num_chars = 0, 0, 0, 0
     output_data = []
-    for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader), miniters =len(test_loader)/100):
+    #for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader), miniters =len(test_loader)/100):
+    start_iter = 0
+    for i, (data) in enumerate(test_loader, start=start_iter):
         inputs, targets, input_percentages, target_sizes = data
         input_sizes = input_percentages.mul_(int(inputs.size(3))).int()
         inputs = inputs.to(device)
