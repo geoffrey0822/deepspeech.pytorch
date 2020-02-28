@@ -305,6 +305,8 @@ if __name__ == '__main__':
               'Average Loss {loss:.3f}\t'.format(epoch + 1, epoch_time=epoch_time, loss=avg_loss))
 
         start_iter = 0  # Reset start iteration for next epoch
+
+        print('Preloading test_loader...')
         with torch.no_grad():
             print('loading test_loader...')
             test_loader = AudioDataLoader(test_dataset, batch_sampler=test_sampler,
@@ -314,6 +316,7 @@ if __name__ == '__main__':
                                              model=model,
                                              decoder=decoder,
                                              target_decoder=decoder)
+            test_loader = None
         loss_results[epoch] = avg_loss
         wer_results[epoch] = wer
         cer_results[epoch] = cer
