@@ -312,6 +312,7 @@ if __name__ == '__main__':
         if args.val_batch_size > 0:
             print('transforming model to evaluation model')
             model.eval()
+            print('torch.no_grad() acting...')
             with torch.no_grad():
                 wer, cer, output_data = evaluate(test_loader=test_loader,
                                                  device=device,
