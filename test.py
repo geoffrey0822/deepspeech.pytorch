@@ -65,6 +65,7 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=Fa
                 print("Hyp:", transcript.lower())
                 print("WER:", float(wer_inst) / len(reference.split()),
                       "CER:", float(cer_inst) / len(reference.replace(' ', '')), "\n")
+            del transcript, reference, wer_inst, cer_inst
         del out, output_sizes, decoded_output, target_strings
     print('')
     wer = float(total_wer) / num_tokens
