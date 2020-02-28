@@ -306,6 +306,7 @@ if __name__ == '__main__':
 
         start_iter = 0  # Reset start iteration for next epoch
         with torch.no_grad():
+            print('loading test_loader...')
             test_loader = AudioDataLoader(test_dataset, batch_sampler=test_sampler,
                                           num_workers=args.num_workers, pin_memory=False)
             wer, cer, output_data = evaluate(test_loader=test_loader,
