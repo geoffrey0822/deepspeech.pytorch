@@ -85,7 +85,7 @@ parser.add_argument('--keep-batchnorm-fp32', type=str, default=None)
 parser.add_argument('--loss-scale', default=1,
                     help='Loss scaling used by Apex. Default is 1 due to warp-ctc not supporting scaling of gradients')
 
-parser.add_argument('--beam', help='Use beam search instead of argmax', action='store_true', default=False)
+parser.add_argument('--beam', help='Use beam search instead of argmax', type=int, default=0)
 add_decoder_args(parser)
 
 torch.manual_seed(123456)
@@ -192,7 +192,7 @@ if __name__ == '__main__':
                            bidirectional=args.bidirectional)
 
     decoder = GreedyDecoder(labels)
-    if args.beam:
+    if args.beam==1:
         from decoder import BeamCTCDecoder
         decoder = BeamCTCDecoder(labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
                                  cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
