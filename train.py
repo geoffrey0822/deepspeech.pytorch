@@ -191,12 +191,14 @@ if __name__ == '__main__':
                            audio_conf=audio_conf,
                            bidirectional=args.bidirectional)
 
-    decoder = GreedyDecoder(labels)
+    target_decoder = GreedyDecoder(labels)
     if args.beam==1:
         from decoder import BeamCTCDecoder
         decoder = BeamCTCDecoder(labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
                                  cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
                                  beam_width=args.beam_width, num_processes=args.lm_workers)
+    else:
+        decoder = target_decoder
 
     train_dataset = SpectrogramDataset(audio_conf=audio_conf, manifest_filepath=args.train_manifest, labels=labels,
                                        normalize=True, speed_volume_perturb=args.speed_volume_perturb, spec_augment=args.spec_augment)
@@ -328,7 +330,7 @@ if __name__ == '__main__':
                                                  device=device,
                                                  model=model,
                                                  decoder=decoder,
-                                                 target_decoder=decoder)
+                                                 target_decoder=target_decoder)
 
                 wer_results[epoch] = wer
                 cer_results[epoch] = cer
