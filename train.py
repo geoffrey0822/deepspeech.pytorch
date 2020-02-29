@@ -17,6 +17,7 @@ from logger import VisdomLogger, TensorBoardLogger
 from model import DeepSpeech, supported_rnns
 from test import evaluate
 from utils import reduce_tensor, check_loss
+from opts import add_decoder_args
 
 parser = argparse.ArgumentParser(description='DeepSpeech training')
 parser.add_argument('--train-manifest', metavar='DIR',
@@ -83,6 +84,9 @@ parser.add_argument('--opt-level', type=str)
 parser.add_argument('--keep-batchnorm-fp32', type=str, default=None)
 parser.add_argument('--loss-scale', default=1,
                     help='Loss scaling used by Apex. Default is 1 due to warp-ctc not supporting scaling of gradients')
+
+parser.add_argument('--beam', help='Use beam search instead of argmax', action='store_true', default=False)
+add_decoder_args(parser)
 
 torch.manual_seed(123456)
 torch.cuda.manual_seed_all(123456)
@@ -188,6 +192,12 @@ if __name__ == '__main__':
                            bidirectional=args.bidirectional)
 
     decoder = GreedyDecoder(labels)
+    if args.beam:
+        from decoder import BeamCTCDecoder
+        decoder = BeamCTCDecoder(labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
+                                 cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
+                                 beam_width=args.beam_width, num_processes=args.lm_workers)
+
     train_dataset = SpectrogramDataset(audio_conf=audio_conf, manifest_filepath=args.train_manifest, labels=labels,
                                        normalize=True, speed_volume_perturb=args.speed_volume_perturb, spec_augment=args.spec_augment)
     test_dataset = SpectrogramDataset(audio_conf=audio_conf, manifest_filepath=args.val_manifest, labels=labels,
