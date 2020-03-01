@@ -30,46 +30,46 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
     #nlen = len(test_loader)
 
     #print('processing...')
+    pbar = tqdm(total=len(test_loader))
+    for i, (data) in enumerate(test_loader, start=start_iter):
+        #print('processing %d'%(i+1))
+        inputs, targets, input_percentages, target_sizes = data
+        input_sizes = input_percentages.mul_(int(inputs.size(3))).int()
+        inputs = inputs.to(device)
+        if half:
+            inputs = inputs.half()
+        # unflatten targets
+        split_targets = []
+        offset = 0
+        for size in target_sizes:
+            split_targets.append(targets[offset:offset + size])
+            offset += size
 
-    with tqdm(total=len(test_loader)) as pbar:
-        for i, (data) in enumerate(test_loader, start=start_iter):
-            #print('processing %d'%(i+1))
-            inputs, targets, input_percentages, target_sizes = data
-            input_sizes = input_percentages.mul_(int(inputs.size(3))).int()
-            inputs = inputs.to(device)
-            if half:
-                inputs = inputs.half()
-            # unflatten targets
-            split_targets = []
-            offset = 0
-            for size in target_sizes:
-                split_targets.append(targets[offset:offset + size])
-                offset += size
+        out, output_sizes = model(inputs, input_sizes)
 
-            out, output_sizes = model(inputs, input_sizes)
+        decoded_output, _ = decoder.decode(out, output_sizes)
+        target_strings = target_decoder.convert_to_strings(split_targets)
 
-            decoded_output, _ = decoder.decode(out, output_sizes)
-            target_strings = target_decoder.convert_to_strings(split_targets)
-
-            if save_output is not None:
-                # add output to data array, and continue
-                output_data.append((out.cpu().numpy(), output_sizes.numpy(), target_strings))
-            for x in range(len(target_strings)):
-                transcript, reference = decoded_output[x][0], target_strings[x][0]
-                wer_inst = decoder.wer(transcript, reference)
-                cer_inst = decoder.cer(transcript, reference)
-                total_wer += wer_inst
-                total_cer += cer_inst
-                num_tokens += len(reference.split())
-                num_chars += len(reference.replace(' ', ''))
-                if verbose:
-                    print("Ref:", reference.lower())
-                    print("Hyp:", transcript.lower())
-                    print("WER:", float(wer_inst) / len(reference.split()),
-                          "CER:", float(cer_inst) / len(reference.replace(' ', '')), "\n")
-                del transcript, reference, wer_inst, cer_inst
-            del out, output_sizes, decoded_output, target_strings
-            pbar.update(1)
+        if save_output is not None:
+            # add output to data array, and continue
+            output_data.append((out.cpu().numpy(), output_sizes.numpy(), target_strings))
+        for x in range(len(target_strings)):
+            transcript, reference = decoded_output[x][0], target_strings[x][0]
+            wer_inst = decoder.wer(transcript, reference)
+            cer_inst = decoder.cer(transcript, reference)
+            total_wer += wer_inst
+            total_cer += cer_inst
+            num_tokens += len(reference.split())
+            num_chars += len(reference.replace(' ', ''))
+            if verbose:
+                print("Ref:", reference.lower())
+                print("Hyp:", transcript.lower())
+                print("WER:", float(wer_inst) / len(reference.split()),
+                      "CER:", float(cer_inst) / len(reference.replace(' ', '')), "\n")
+            del transcript, reference, wer_inst, cer_inst
+        del out, output_sizes, decoded_output, target_strings
+        pbar.update(1)
+    pbar.close()
     print('')
     wer = float(total_wer) / num_tokens
     cer = float(total_cer) / num_chars
