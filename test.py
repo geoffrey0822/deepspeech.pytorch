@@ -29,7 +29,7 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
     pbar = tqdm(total=len(test_loader))
     start_iter = 0
     #nlen = len(test_loader)
-    #print('')
+    print('')
     #print('processing...')
     for i, (data) in enumerate(test_loader, start=start_iter):
         #print('processing %d'%(i+1))
