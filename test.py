@@ -27,12 +27,12 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
     output_data = []
     #for i, (data) in tqdm(enumerate(test_loader), total=len(test_loader)):
     start_iter = 0
-    #nlen = len(test_loader)
+    nlen = len(test_loader)
 
     #print('processing...')
-    pbar = tqdm(total=len(test_loader))
+    #pbar = tqdm(total=len(test_loader))
     for i, (data) in enumerate(test_loader, start=start_iter):
-        #print('processing %d'%(i+1))
+        print('processing %d/%d'%(i+1,nlen))
         inputs, targets, input_percentages, target_sizes = data
         input_sizes = input_percentages.mul_(int(inputs.size(3))).int()
         inputs = inputs.to(device)
@@ -68,8 +68,8 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
                       "CER:", float(cer_inst) / len(reference.replace(' ', '')), "\n")
             del transcript, reference, wer_inst, cer_inst
         del out, output_sizes, decoded_output, target_strings
-        pbar.update(1)
-    pbar.close()
+        #pbar.update(1)
+    #pbar.close()
     print('')
     wer = float(total_wer) / num_tokens
     cer = float(total_cer) / num_chars
