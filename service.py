@@ -33,17 +33,20 @@ def b64_to_file(b64_string, fpath):
         fh.write(base64.decodebytes(b64_string.encode()))
 
 
-def analysis(file_path):
+def analysis(file_path, decoder_type='greedy'):
     global model, device, greedy_decoder, beam_decoder, audio_parser
     input_data = audio_parser.parse_audio(file_path)
     input_sizes = torch.IntTensor(1)
     input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
-    input[0,0,:,:] = input_data
-    #print(input_data.shape)
-    output, _ = model(input, input_sizes)
+    input[0][0].narrow(1, 0, input_data.size(1)).copy_(input)
+    output, output_sizes = model(input, input_sizes)
     print('[Done]')
     os.remove(file_path)
-    return {'transcript':''}
+    if decoder_type == 'greedy':
+        transcript, _= greedy_decoder.decode(output, output_sizes)
+    else:
+        transcript, _= beam_decoder.decode(output, output_sizes)
+    return {'transcript': transcript}
 
 
 class Speech2Text(Resource):
@@ -55,19 +58,22 @@ class Speech2Text(Resource):
             src = input_json['source']
             data = input_json['data']
             fmt = input_json['format']
+            decoder_type = 'greedy'
+            if 'decoder' in input_json:
+                decoder_type = input_json['decoder']
             result_json = None
-            if src=='base64':
+            if src == 'base64':
                 tmp_filename = os.path.join(tmp_path, '%s.%s'%(datetime.now().strftime('%d%m%Y%H%M%S%f'), fmt))
                 b64_to_file(data, tmp_filename)
-                result_json = analysis(tmp_filename)
-            elif src=='http':
+                result_json = analysis(tmp_filename, decoder_type)
+            elif src == 'http':
                 tmp_filename = os.path.join(tmp_path, '%s.%s'%(datetime.now().strftime('%d%m%Y%H%M%S%f'), fmt))
                 resp = requests.get(data, stream=True)
                 resp.raw.decode_content = True
                 with open(tmp_filename, 'wb') as imgf:
                     shutil.copyfileobj(resp.raw, imgf)
                 del resp
-                result_json = analysis(tmp_filename)
+                result_json = analysis(tmp_filename, decoder_type)
             if result_json is not None:
                 output['result'] = result_json
                 output['return_code'] = 0
