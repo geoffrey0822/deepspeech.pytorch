@@ -68,7 +68,10 @@ class Speech2Text(Resource):
             if src == 'base64':
                 tmp_filename = os.path.join(tmp_path, '%s.%s'%(datetime.now().strftime('%d%m%Y%H%M%S%f'), fmt))
                 b64_to_file(data, tmp_filename)
-                result_json = analysis(tmp_filename, decoder_type)
+                if fmt == 'wav':
+                    result_json = analysis(tmp_filename, decoder_type)
+                else:
+                    result_json = {'unsupported format'}
             elif src == 'http':
                 tmp_filename = os.path.join(tmp_path, '%s.%s'%(datetime.now().strftime('%d%m%Y%H%M%S%f'), fmt))
                 resp = requests.get(data, stream=True)
