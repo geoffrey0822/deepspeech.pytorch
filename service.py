@@ -56,6 +56,8 @@ class Speech2Text(Resource):
         output = {'return_code': -1}
         if task_id == 'analysis':
             input_json = request.get_json()
+            if input_json is None:
+                return output
             src = input_json['source']
             data = input_json['data']
             fmt = input_json['format']
