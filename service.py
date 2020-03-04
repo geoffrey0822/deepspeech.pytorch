@@ -106,8 +106,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     device = torch.device("cuda")
     model = load_model(device, args.model, False)
-    greedy_decoder = GreedyDecoder(model.dict, blank_index=model.labels.index('_'))
-    beam_decoder = BeamCTCDecoder(model.dict, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
+    greedy_decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
+    beam_decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
                                  cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
                                  beam_width=args.beam_width, num_processes=args.lm_workers)
     audio_parser = SpectrogramParser(audio_conf=model.audio_conf, normalize=True)
