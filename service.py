@@ -1,8 +1,9 @@
-from flask import Flask, requests
+from flask import Flask, request
 from flask_restful import Resource, Api
 
 import argparse, os, datetime, base64
 import torch
+import requests
 import shutil
 from data.data_loader import SpectrogramDataset, AudioDataLoader, SpectrogramParser
 from decoder import GreedyDecoder
@@ -54,7 +55,7 @@ class Speech2Text(Resource):
         global tmp_path
         output = {'return_code': -1}
         if task_id == 'analysis':
-            input_json = requests.get_json()
+            input_json = request.get_json()
             src = input_json['source']
             data = input_json['data']
             fmt = input_json['format']
