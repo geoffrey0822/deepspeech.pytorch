@@ -39,25 +39,24 @@ def b64_to_file(b64_string, fpath):
 
 def analysis(file_path, decoder_type='greedy'):
     global model, device, greedy_decoder, beam_decoder, audio_parser
-    with torch.no_grad():
-        input_data = audio_parser.parse_audio(file_path)
-        #input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
-        input = input_data.reshape(1, 1, input_data.size(0), input_data.size(1))
-        input = input.to(device)
-        input_sizes = torch.tensor([input.size(3)], dtype=torch.int32)
-        print(input.shape)
-        print(input.size(3))
-        print(input_sizes)
-        #input[0][0].narrow(1, 0, input_data.size(1)).copy_(input.reshape(1, 1, input_data.size(0), input_data.size(1)))
-        output, output_sizes = model(input, input_sizes)
-        print('[Done]')
-        os.remove(file_path)
-        if decoder_type == 'greedy':
-            transcript, _= greedy_decoder.decode(output, output_sizes)
-        else:
-            transcript, _= beam_decoder.decode(output, output_sizes)
-        print(transcript)
-        return {'transcript': transcript}
+    input_data = audio_parser.parse_audio(file_path)
+    #input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
+    input = input_data.reshape(1, 1, input_data.size(0), input_data.size(1))
+    input = input.to(device)
+    input_sizes = torch.tensor([input.size(3)], dtype=torch.int32)
+    print(input.shape)
+    print(input.size(3))
+    print(input_sizes)
+    #input[0][0].narrow(1, 0, input_data.size(1)).copy_(input.reshape(1, 1, input_data.size(0), input_data.size(1)))
+    output, output_sizes = model(input, input_sizes)
+    print('[Done]')
+    os.remove(file_path)
+    if decoder_type == 'greedy':
+        transcript, _= greedy_decoder.decode(output, output_sizes)
+    else:
+        transcript, _= beam_decoder.decode(output, output_sizes)
+    print(transcript)
+    return {'transcript': transcript}
 
 
 class Speech2Text(Resource):
@@ -161,11 +160,12 @@ api.add_resource(Speech2Text, '/asr/<string:task_id>')
 
 if __name__ == '__main__':
     args = parser.parse_args()
+
+    torch.set_grad_enabled(False)
     device = torch.device("cuda")
     #package = torch.load(args.model, map_location=lambda storage, loc: storage)
     #model = DeepSpeech.load_model_package(package).to(device)
     model = load_model(device, args.model, False)
-    model.eval()
     greedy_decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
     beam_decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
                                  cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
