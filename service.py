@@ -163,7 +163,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     device = torch.device("cuda")
     package = torch.load(args.model, map_location=lambda storage, loc: storage)
-    model = DeepSpeech.load_model_package(package)
+    model = DeepSpeech.load_model_package(package).to(device)
     model.eval()
     greedy_decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
     beam_decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
