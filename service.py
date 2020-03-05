@@ -162,8 +162,9 @@ api.add_resource(Speech2Text, '/asr/<string:task_id>')
 if __name__ == '__main__':
     args = parser.parse_args()
     device = torch.device("cuda")
-    package = torch.load(args.model, map_location=lambda storage, loc: storage)
-    model = DeepSpeech.load_model_package(package).to(device)
+    #package = torch.load(args.model, map_location=lambda storage, loc: storage)
+    #model = DeepSpeech.load_model_package(package).to(device)
+    model = load_model(device, args.model, False)
     model.eval()
     greedy_decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
     beam_decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
