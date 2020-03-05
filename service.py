@@ -37,21 +37,22 @@ def b64_to_file(b64_string, fpath):
 
 def analysis(file_path, decoder_type='greedy'):
     global model, device, greedy_decoder, beam_decoder, audio_parser
-    input_data = audio_parser.parse_audio(file_path)
-    input_sizes = torch.IntTensor(1)
-    #input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
-    input = input_data.reshape(1, 1, input_data.size(0), input_data.size(1))
-    input = input.to(device)
-    print(input.shape)
-    #input[0][0].narrow(1, 0, input_data.size(1)).copy_(input.reshape(1, 1, input_data.size(0), input_data.size(1)))
-    output, output_sizes = model(input, input_sizes)
-    print('[Done]')
-    os.remove(file_path)
-    if decoder_type == 'greedy':
-        transcript, _= greedy_decoder.decode(output, output_sizes)
-    else:
-        transcript, _= beam_decoder.decode(output, output_sizes)
-    return {'transcript': transcript}
+        with torch.no_grad():
+        input_data = audio_parser.parse_audio(file_path)
+        input_sizes = torch.IntTensor(1)
+        #input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
+        input = input_data.reshape(1, 1, input_data.size(0), input_data.size(1))
+        input = input.to(device)
+        print(input.shape)
+        #input[0][0].narrow(1, 0, input_data.size(1)).copy_(input.reshape(1, 1, input_data.size(0), input_data.size(1)))
+        output, output_sizes = model(input, input_sizes)
+        print('[Done]')
+        os.remove(file_path)
+        if decoder_type == 'greedy':
+            transcript, _= greedy_decoder.decode(output, output_sizes)
+        else:
+            transcript, _= beam_decoder.decode(output, output_sizes)
+        return {'transcript': transcript}
 
 
 class Speech2Text(Resource):
