@@ -10,6 +10,7 @@ from data.data_loader import SpectrogramDataset, AudioDataLoader, SpectrogramPar
 from decoder import GreedyDecoder
 from decoder import BeamCTCDecoder
 from opts import add_decoder_args, add_inference_args
+from model import DeepSpeech
 from utils import load_model
 
 parser = argparse.ArgumentParser(description='DeepSpeech API')
@@ -161,7 +162,8 @@ api.add_resource(Speech2Text, '/asr/<string:task_id>')
 if __name__ == '__main__':
     args = parser.parse_args()
     device = torch.device("cuda")
-    model = load_model(device, args.model, False)
+    package = torch.load(args.model, map_location=lambda storage, loc: storage)
+    model = DeepSpeech.load_model_package(package)
     model.eval()
     greedy_decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
     beam_decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
