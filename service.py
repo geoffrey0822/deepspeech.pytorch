@@ -40,7 +40,7 @@ def analysis(file_path, decoder_type='greedy'):
     global model, device, greedy_decoder, beam_decoder, audio_parser
     with torch.no_grad():
         input_data = audio_parser.parse_audio(file_path)
-        input_sizes = torch.IntTensor(1)
+        input_sizes = input_data.size(3).int()
         #input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
         input = input_data.reshape(1, 1, input_data.size(0), input_data.size(1))
         input = input.to(device)
