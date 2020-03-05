@@ -53,6 +53,7 @@ def analysis(file_path, decoder_type='greedy'):
             transcript, _= greedy_decoder.decode(output, output_sizes)
         else:
             transcript, _= beam_decoder.decode(output, output_sizes)
+        print(transcript)
         return {'transcript': transcript}
 
 
