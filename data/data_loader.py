@@ -188,6 +188,7 @@ def _collate_fn(batch):
     longest_sample = max(batch, key=func)[0]
     freq_size = longest_sample.size(0)
     minibatch_size = len(batch)
+    print(minibatch_size)
     max_seqlength = longest_sample.size(1)
     inputs = torch.zeros(minibatch_size, 1, freq_size, max_seqlength)
     input_percentages = torch.FloatTensor(minibatch_size)
