@@ -43,7 +43,7 @@ def analysis(file_path, decoder_type='greedy'):
         #input = torch.zeros(1, 1, input_data.size(0), input_data.size(1))
         input = input_data.reshape(1, 1, input_data.size(0), input_data.size(1))
         input = input.to(device)
-        input_sizes = torch.tensor(input.size(3), dtype=torch.int32)
+        input_sizes = torch.tensor([input.size(3)], dtype=torch.int32)
         print(input.shape)
         print(input.size(3))
         print(input_sizes)
