@@ -46,6 +46,7 @@ def analysis(file_path, decoder_type='greedy'):
         input_sizes = torch.tensor(input.size(3), dtype=int)
         print(input.shape)
         print(input.size(3))
+        print(input_sizes)
         #input[0][0].narrow(1, 0, input_data.size(1)).copy_(input.reshape(1, 1, input_data.size(0), input_data.size(1)))
         output, output_sizes = model(input, input_sizes)
         print('[Done]')
