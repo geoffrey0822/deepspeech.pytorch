@@ -104,6 +104,48 @@ class Speech2Text(Resource):
             ]
         return output
 
+    def post(self, task_id):
+        global tmp_path
+        output = {'return_code': -1}
+        if task_id == 'analysis':
+            input_json = request.get_json()
+            if input_json is None:
+                return output
+            src = input_json['source']
+            data = input_json['data']
+            fmt = input_json['format']
+            decoder_type = 'greedy'
+            if 'decoder' in input_json:
+                decoder_type = input_json['decoder']
+            result_json = None
+            if src == 'base64':
+                tmp_filename = os.path.join(tmp_path, '%s.%s'%(datetime.now().strftime('%d%m%Y%H%M%S%f'), fmt))
+                b64_to_file(data, tmp_filename)
+                if fmt == 'wav':
+                    result_json = analysis(tmp_filename, decoder_type)
+                else:
+                    result_json = {'unsupported format'}
+            elif src == 'http':
+                tmp_filename = os.path.join(tmp_path, '%s.%s'%(datetime.now().strftime('%d%m%Y%H%M%S%f'), fmt))
+                resp = requests.get(data, stream=True)
+                resp.raw.decode_content = True
+                with open(tmp_filename, 'wb') as imgf:
+                    shutil.copyfileobj(resp.raw, imgf)
+                del resp
+                result_json = analysis(tmp_filename, decoder_type)
+            if result_json is not None:
+                output['result'] = result_json
+                output['return_code'] = 0
+            else:
+                output['return_code'] = -1
+        elif task_id == 'new_data':
+            input_json = requests.get_json()
+            src = input_json['source']
+            data = input_json['data']
+            transcript = input_json['transcript']
+            output['return_code'] = 0
+        return output
+
 
 api.add_resource(Speech2Text, '/asr/<string:task_id>')
 
@@ -116,6 +158,7 @@ if __name__ == '__main__':
                                  cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
                                  beam_width=args.beam_width, num_processes=args.lm_workers)
     audio_parser = SpectrogramParser(audio_conf=model.audio_conf, normalize=True)
+
     #test_dataset = SpectrogramDataset(audio_conf=model.audio_conf, manifest_filepath=args.test_manifest,
     #                                  labels=model.labels, normalize=True)
     if not os.path.isdir(tmp_path):
