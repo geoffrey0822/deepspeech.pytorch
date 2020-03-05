@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description='DeepSpeech API')
 parser.add_argument('--device', type=str, default='cuda')
 parser.add_argument('--model', type=str, default='weights.pth')
 parser.add_argument('--dict', type=str, default='dict.json')
+parser.add_argument('--test', default=None)
 parser = add_decoder_args(parser)
 
 tmp_path = '/tmp_files'
@@ -165,6 +166,8 @@ if __name__ == '__main__':
                                  beam_width=args.beam_width, num_processes=args.lm_workers)
     audio_parser = SpectrogramParser(audio_conf=model.audio_conf, normalize=True)
 
+    if args.test is not None:
+        analysis(args.test)
     #test_dataset = SpectrogramDataset(audio_conf=model.audio_conf, manifest_filepath=args.test_manifest,
     #                                  labels=model.labels, normalize=True)
     if not os.path.isdir(tmp_path):
