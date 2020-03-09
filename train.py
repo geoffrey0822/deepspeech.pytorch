@@ -82,6 +82,8 @@ parser.add_argument('--gpu-rank', default=None,
 parser.add_argument('--seed', default=123456, type=int, help='Seed to generators')
 parser.add_argument('--opt-level', type=str)
 parser.add_argument('--keep-batchnorm-fp32', type=str, default=None)
+parser.add_argument('--wer-weight', type=float, default=1.0)
+parser.add_argument('--cer-weight', type=float, default=0.0)
 parser.add_argument('--loss-scale', default=1,
                     help='Loss scaling used by Apex. Default is 1 due to warp-ctc not supporting scaling of gradients')
 
@@ -139,7 +141,8 @@ if __name__ == '__main__':
 
     loss_results, cer_results, wer_results = torch.Tensor(args.epochs), torch.Tensor(args.epochs), torch.Tensor(
         args.epochs)
-    best_wer = None
+    #best_wer = None
+    best_er = None
     if main_proc and args.visdom:
         visdom_logger = VisdomLogger(args.id, args.epochs)
     if main_proc and args.tensorboard:
@@ -165,7 +168,8 @@ if __name__ == '__main__':
             avg_loss = int(package.get('avg_loss', 0))
             loss_results, cer_results, wer_results = package['loss_results'], package['cer_results'], \
                                                      package['wer_results']
-            best_wer = wer_results[start_epoch]
+            #best_wer = wer_results[start_epoch]
+            best_er = (wer_results[start_epoch]*args.wer_weight + cer_results[start_epoch]*args.cer_weight)/(args.wer_weight+args.cer_weight)
             if main_proc and args.visdom:  # Add previous scores to visdom graph
                 visdom_logger.load_previous_values(start_epoch, package)
             if main_proc and args.tensorboard:  # Previous scores to tensorboard logs
@@ -334,21 +338,23 @@ if __name__ == '__main__':
 
                 wer_results[epoch] = wer
                 cer_results[epoch] = cer
-        else:
-            if epoch == 0:
-                wer = 100
-                cer = 100
-            else:
-                wer = wer_results[epoch]-0.1
-                cer = cer_results[epoch]-0.1
+        #else:
+            #if epoch == 0:
+            #    wer = 100
+            #    cer = 100
+            #else:
+            #    wer = wer_results[epoch]-0.1
+            #    cer = cer_results[epoch]-0.1
 
         loss_results[epoch] = avg_loss
         wer_results[epoch] = wer
         cer_results[epoch] = cer
+        er = (wer * args.wer_weight + cer * args.cer_weight)/(args.wer_weight + args.cer_weight)
         print('Validation Summary Epoch: [{0}]\t'
               'Average WER {wer:.3f}\t'
-              'Average CER {cer:.3f}\t'.format(
-            epoch + 1, wer=wer, cer=cer))
+              'Average CER {cer:.3f}\t'
+              'Average ER [er:.3f]\t'.format(
+            epoch + 1, wer=wer, cer=cer, er=er))
 
         values = {
             'loss_results': loss_results,
@@ -375,7 +381,8 @@ if __name__ == '__main__':
             g['lr'] = g['lr'] / args.learning_anneal
         print('Learning rate annealed to: {lr:.6f}'.format(lr=g['lr']))
 
-        if main_proc and (best_wer is None or best_wer > wer):
+        #if main_proc and (best_wer is None or best_wer > wer):
+        if main_proc and (best_er is None or best_er > er):
             print("Found better validated model, saving to %s" % args.model_path)
             torch.save(DeepSpeech.serialize(model, optimizer=optimizer, amp=amp, epoch=epoch, loss_results=loss_results,
                                             wer_results=wer_results, cer_results=cer_results)
