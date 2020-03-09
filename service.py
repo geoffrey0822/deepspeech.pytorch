@@ -322,8 +322,6 @@ if __name__ == '__main__':
         analysis(args.test)
 
     new_data_root_path = args.new_data_root_path
-    new_data_csv = args.new_data_csv
-    new_data_commit = args.new_data_commit
     db_path = args.db_path
 
     if not os.path.isdir(db_path):

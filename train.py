@@ -387,7 +387,8 @@ if __name__ == '__main__':
             torch.save(DeepSpeech.serialize(model, optimizer=optimizer, amp=amp, epoch=epoch, loss_results=loss_results,
                                             wer_results=wer_results, cer_results=cer_results)
                        , args.model_path)
-            best_wer = wer
+            #best_wer = wer
+            best_er = er
             avg_loss = 0
 
         if not args.no_shuffle:
