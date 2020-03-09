@@ -353,7 +353,7 @@ if __name__ == '__main__':
         print('Validation Summary Epoch: [{0}]\t'
               'Average WER {wer:.3f}\t'
               'Average CER {cer:.3f}\t'
-              'Average ER [er:.3f]\t'.format(
+              'Average ER {er:.3f}\t'.format(
             epoch + 1, wer=wer, cer=cer, er=er))
 
         values = {
