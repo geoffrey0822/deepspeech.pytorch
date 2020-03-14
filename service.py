@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
+from flask_restful.utils import cors
 
 import argparse, os, base64
 from datetime import datetime
@@ -36,6 +37,9 @@ pending_buffer_count = 20
 
 app = Flask(__name__)
 api = Api(app)
+api.decorators=[cors.crossdomain(origin='*')]
+
+
 torch.set_grad_enabled(False)
 device = None
 model = None
