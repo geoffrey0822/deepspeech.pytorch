@@ -353,4 +353,4 @@ if __name__ == '__main__':
     #                                  labels=model.labels, normalize=True)
     if not os.path.isdir(tmp_path):
         os.mkdir(tmp_path)
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
