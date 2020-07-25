@@ -167,8 +167,16 @@ if __name__ == '__main__':
             if main_proc and args.tensorboard:  # Previous scores to tensorboard logs
                 tensorboard_logger.load_previous_values(start_epoch, package)
     else:
-        with open(args.labels_path, 'r', encoding='utf8') as label_file:
-            labels = str(''.join(json.load(label_file)))
+        label_fname, label_ext = os.path.splitext(args.labels_path)
+        if label_ext == '.json':
+            with open(args.labels_path, 'r', encoding='utf8') as label_file:
+                labels = str(''.join(json.load(label_file)))
+        else:
+            with open(args.labels_path, 'r', encoding='utf8') as label_file:
+                for ln in label_file:
+                    line = ln.rstrip('\n')
+                    labels = line.split(' ')
+                    break
 
         audio_conf = dict(sample_rate=args.sample_rate,
                           window_size=args.window_size,
