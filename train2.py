@@ -177,6 +177,7 @@ if __name__ == '__main__':
                     line = ln.rstrip('\n')
                     labels = line.split(' ')
                     break
+            labels.insert(0, ' ')
 
         audio_conf = dict(sample_rate=args.sample_rate,
                           window_size=args.window_size,
