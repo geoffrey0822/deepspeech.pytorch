@@ -51,7 +51,7 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
         target_strings = target_decoder.convert_to_strings(split_targets)
 
         print(decoded_output)
-        print(target_strings)
+        print(targets)
         if save_output is not None:
             # add output to data array, and continue
             output_data.append((out.cpu().numpy(), output_sizes.numpy(), target_strings))
