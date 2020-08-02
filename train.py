@@ -181,10 +181,12 @@ if __name__ == '__main__':
                 labels = str(''.join(json.load(label_file)))
         else:
             with open(args.labels_path, 'r', encoding='utf8') as label_file:
+                labels = []
                 for ln in label_file:
                     line = ln.rstrip('\n')
-                    labels = line.split(' ')
-                    break
+                    if line == ' ' or line == '':
+                        continue
+                    labels.append(line)
             labels.insert(0, ' ')
 
         audio_conf = dict(sample_rate=args.sample_rate,
