@@ -199,6 +199,7 @@ def _collate_fn(batch):
         sample = batch[x]
         tensor = sample[0]
         target = sample[1]
+        print(target)
         seq_length = tensor.size(1)
         inputs[x][0].narrow(1, 0, seq_length).copy_(tensor)
         input_percentages[x] = seq_length / float(max_seqlength)
