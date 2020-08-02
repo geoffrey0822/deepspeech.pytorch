@@ -54,6 +54,8 @@ class Decoder(object):
         b = set(s1.split() + s2.split())
         word2char = dict(zip(b, range(len(b))))
 
+        print(s1)
+
         # map the words to a char array (Levenshtein packages only accepts
         # strings)
         w1 = [chr(word2char[w]) for w in s1.split()]
