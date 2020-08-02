@@ -187,7 +187,8 @@ if __name__ == '__main__':
                     if line == ' ' or line == '':
                         continue
                     for ch in line.split(' '):
-                        labels.append(ch)
+                        if ch !='':
+                            labels.append(ch)
             if ' ' not in labels:
                 labels.insert(0, ' ')
         print(labels)
