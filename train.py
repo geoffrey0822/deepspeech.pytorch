@@ -190,6 +190,7 @@ if __name__ == '__main__':
                         labels.append(ch)
             if ' ' not in labels:
                 labels.insert(0, ' ')
+        print(labels)
 
         audio_conf = dict(sample_rate=args.sample_rate,
                           window_size=args.window_size,
