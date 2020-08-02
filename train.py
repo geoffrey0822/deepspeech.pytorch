@@ -186,8 +186,10 @@ if __name__ == '__main__':
                     line = ln.rstrip('\n')
                     if line == ' ' or line == '':
                         continue
-                    labels.append(line)
-            labels.insert(0, ' ')
+                    for ch in line.split(' '):
+                        labels.append(ch)
+            if ' ' not in labels:
+                labels.insert(0, ' ')
 
         audio_conf = dict(sample_rate=args.sample_rate,
                           window_size=args.window_size,
