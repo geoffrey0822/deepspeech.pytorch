@@ -174,6 +174,7 @@ class SpectrogramDataset(Dataset, SpectrogramParser):
             transcript = transcript_file.read().replace('\n', '')
             #transcript = seg_char(transcript)
             transcript = transcript.split(' ')
+            print(transcript)
         transcript = list(filter(None, [self.labels_map.get(x) for x in list(transcript)]))
         return transcript
 
