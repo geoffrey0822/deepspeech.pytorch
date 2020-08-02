@@ -55,6 +55,8 @@ def evaluate(test_loader, device, model, decoder, target_decoder, save_output=No
             output_data.append((out.cpu().numpy(), output_sizes.numpy(), target_strings))
         for x in range(len(target_strings)):
             transcript, reference = decoded_output[x][0], target_strings[x][0]
+            print(transcript)
+            print(reference)
             wer_inst = decoder.wer(transcript, reference)
             cer_inst = decoder.cer(transcript, reference)
             total_wer += wer_inst

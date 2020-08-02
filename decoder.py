@@ -60,7 +60,6 @@ class Decoder(object):
         w1 = [chr(word2char[w]) for w in s1.split()]
         w2 = [chr(word2char[w]) for w in s2.split()]
 
-        print(w1)
 
         return Lev.distance(''.join(w1), ''.join(w2))
 
