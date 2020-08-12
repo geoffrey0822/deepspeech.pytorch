@@ -14,7 +14,7 @@ from opts import add_decoder_args, add_inference_args
 from model import DeepSpeech
 from utils import load_model
 
-import pickledb
+#import pickledb
 
 parser = argparse.ArgumentParser(description='DeepSpeech API')
 parser.add_argument('--device', type=str, default='cuda')
@@ -23,6 +23,7 @@ parser.add_argument('--dict', type=str, default='dict.json')
 parser.add_argument('--test', default=None)
 parser.add_argument('--new-data-root-path', type=str, default='/new_data')
 parser.add_argument('--db-path', type=str, default='service_db')
+parser.add_argument('--port', type=int, default=5000)
 parser = add_decoder_args(parser)
 
 tmp_path = '/tmp_files'
@@ -353,4 +354,4 @@ if __name__ == '__main__':
     #                                  labels=model.labels, normalize=True)
     if not os.path.isdir(tmp_path):
         os.mkdir(tmp_path)
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=args.port)
