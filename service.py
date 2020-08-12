@@ -335,15 +335,17 @@ if __name__ == '__main__':
     commit_db_path = os.path.join(db_path, 'valid.db')
     lock_db_path = os.path.join(db_path, 'lock.db')
     sys_db_path = os.path.join(db_path, 'sys.db')
+
     #pending_db = pickledb.load(pending_db_path, False)
     #lock_db = pickledb.load(lock_db_path, False)
     #sys_db = pickledb.load(sys_db_path, False)
     #commit_db = pickledb.load(commit_db_path, False)
-    if sys_db.exists('data_root_path'):
-        new_data_root_path = sys_db.get('data_root_path')
-        print('Root path has changed from %d to %d'%(new_data_root_path, args.new_data_root_path, new_data_root_path))
-    else:
-        sys_db.set('data_root_path', new_data_root_path)
+    #if sys_db.exists('data_root_path'):
+    #    new_data_root_path = sys_db.get('data_root_path')
+    #    print('Root path has changed from %d to %d'%(new_data_root_path, args.new_data_root_path, new_data_root_path))
+    #else:
+    #    sys_db.set('data_root_path', new_data_root_path)
+
     new_data_path = os.path.join(new_data_root_path, 'data')
     if not os.path.isdir(new_data_root_path):
         os.mkdir(new_data_root_path)
