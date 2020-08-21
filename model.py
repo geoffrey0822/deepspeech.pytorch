@@ -132,6 +132,9 @@ class DeepSpeech(nn.Module):
                  bidirectional=True, context=20):
         super(DeepSpeech, self).__init__()
 
+        print('Bidirection:', end='')
+        print(bidirectional)
+
         # model metadata needed for serialization/deserialization
         if audio_conf is None:
             audio_conf = {}

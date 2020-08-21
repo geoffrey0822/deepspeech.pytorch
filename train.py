@@ -68,7 +68,7 @@ parser.add_argument('--no-shuffle', dest='no_shuffle', action='store_true',
                     help='Turn off shuffling and sample from dataset based on sequence length (smallest to largest)')
 parser.add_argument('--no-sortaGrad', dest='no_sorta_grad', action='store_true',
                     help='Turn off ordering of dataset on sequence length for the first epoch.')
-parser.add_argument('--no-bidirectional', dest='bidirectional', action='store_false', default=True,
+parser.add_argument('--no-bidirectional', dest='bidirectional', action='store_false',
                     help='Turn off bi-directional RNNs, introduces lookahead convolution')
 parser.add_argument('--dist-url', default='tcp://127.0.0.1:1550', type=str,
                     help='url used to set up distributed training')
@@ -208,7 +208,7 @@ if __name__ == '__main__':
                            labels=labels,
                            rnn_type=supported_rnns[rnn_type],
                            audio_conf=audio_conf,
-                           bidirectional=args.bidirectional)
+                           bidirectional=not args.bidirectional)
 
     target_decoder = GreedyDecoder(labels)
     if args.beam==1:
